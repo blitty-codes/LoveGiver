@@ -28,35 +28,39 @@ async def on_ready():
 async def on_raw_reaction_add(payload):
 	if (payload.message_id == 888719215178174475):
 		guild = discord.utils.find(lambda g: g.id == payload.guild_id, client.guilds)
-		role = discord.utils.get(guild.roles, name=roles[payload.emoji.name])
-		print(role)
 
-		if role is not None:
-			member = await guild.fetch_member(payload.user_id)
-			if member is not None:
-				await member.add_roles(role)
-				print("Done!")
+		if payload.emoji.name in roles:
+			role = discord.utils.get(guild.roles, name=roles[payload.emoji.name])
+			print(role)
+
+			if role is not None:
+				member = await guild.fetch_member(payload.user_id)
+				if member is not None:
+					await member.add_roles(role)
+					print("Done!")
+				else:
+					print("Member not found")
 			else:
-				print("Member not found")
-		else:
-			print("Role not found")
+				print("Role not found")
 
 @client.event
 async def on_raw_reaction_remove(payload):
 	if (payload.message_id == 888719215178174475):
 		guild = discord.utils.find(lambda g: g.id == payload.guild_id, client.guilds)
-		role = discord.utils.get(guild.roles, name=roles[payload.emoji.name])
-		print(role)
 
-		if role is not None:
-			member = await guild.fetch_member(payload.user_id)
-			if member is not None:
-				await member.remove_roles(role)
-				print("Done!")
+		if payload.emoji.name in roles:
+			role = discord.utils.get(guild.roles, name=roles[payload.emoji.name])
+			print(role)
+
+			if role is not None:
+				member = await guild.fetch_member(payload.user_id)
+				if member is not None:
+					await member.remove_roles(role)
+					print("Done!")
+				else:
+					print("Member not found")
 			else:
-				print("Member not found")
-		else:
-			print("Role not found")
+				print("Role not found")
 
 #client = CustomClient()
 client.run(TOKEN)
