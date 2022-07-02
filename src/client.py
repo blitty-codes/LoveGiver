@@ -1,13 +1,18 @@
 import discord
 
 from .config import GUILD
+from .utils.roles import assign_rol, remove_rol
 
-roles = {
+common_roles = {
 	'🍎': 'rojo',
 	'🍆': 'morado',
 	'🐷': 'rosa',
 	'🐟': 'azul',
-	'🤪': 'emojier'
+	'🤪': 'emojier',
+}
+
+special_rol = {
+	'DIY_enjoyer': 'DIY enjoyer'
 }
 
 client = discord.Client()
@@ -21,40 +26,18 @@ async def on_ready():
 
 @client.event
 async def on_raw_reaction_add(payload):
+	if (payload.message_id == 992495124896555009):
+		await assign_rol(payload, client, roles=special_rol)
+
 	if (payload.message_id == 888719215178174475):
-		guild = discord.utils.find(lambda g: g.id == payload.guild_id, client.guilds)
-
-		if payload.emoji.name in roles:
-			role = discord.utils.get(guild.roles, name=roles[payload.emoji.name])
-			print(role)
-
-			if role is not None:
-				member = await guild.fetch_member(payload.user_id)
-				if member is not None:
-					await member.add_roles(role)
-					print("Done!")
-				else:
-					print("Member not found")
-			else:
-				print("Role not found")
+		await assign_rol(payload, client, roles=common_roles)
 
 @client.event
 async def on_raw_reaction_remove(payload):
+	if (payload.message_id == 992495124896555009):
+		await remove_rol(payload, client, roles=special_rol)
+
 	if (payload.message_id == 888719215178174475):
-		guild = discord.utils.find(lambda g: g.id == payload.guild_id, client.guilds)
-
-		if payload.emoji.name in roles:
-			role = discord.utils.get(guild.roles, name=roles[payload.emoji.name])
-			print(role)
-
-			if role is not None:
-				member = await guild.fetch_member(payload.user_id)
-				if member is not None:
-					await member.remove_roles(role)
-					print("Done!")
-				else:
-					print("Member not found")
-			else:
-				print("Role not found")
+		await remove_rol(payload, client, roles=common_roles)
 
 #client = CustomClient()
